@@ -1,0 +1,131 @@
+{{> header}}
+{{!-- <link rel="stylesheet" href="assets/css/owlcarousel/owl-carousel-min.css">
+<link rel="stylesheet" href="assets/css/owlcarousel/owl-theme-default-min.css"> --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css">
+<style>
+  .separator {
+    height: 5px;
+    background: #198e36;
+    border-bottom: 1px solid #313030;
+    width: 13%;
+    margin-right: auto;
+    margin-left: 13%;
+    margin-bottom: 15px;
+  }
+
+  .header-titulo {
+    text-align: left;
+    margin: auto;
+    width: 75%;
+    font-weight: 100;
+  }
+
+  .book-card {
+    height: 300px;
+    width: 210px !important;
+    background-color: snow;
+    border-radius: 5px;
+    box-shadow: 10px 10px 5px #aaaaaa;
+    margin-bottom: 15px;
+  }
+
+  .enlace {
+    color: black;
+  }
+
+  .enlace:hover {
+    text-decoration: none;
+    color: #00A86B;
+  }
+
+
+  .book-image {
+    height: 140px;
+    width: 100px !important;
+    overflow: hidden;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 10%;
+
+  }
+
+  .book-title {
+    position: relative;
+    margin-top: 30px;
+    text-align: center;
+    overflow: hidden;
+    max-height: 43px;
+  }
+
+  .book-autor {
+    position: relative;
+    text-align: center;
+    margin-top: -5px;
+    color: #00A86B;
+  }
+
+  .book-price {
+    position: relative;
+    margin-top: 1px;
+    text-align: center;
+  }
+
+  .book-shorcuts {
+    display: flex;
+    position: relative;
+    justify-content: center;
+  }
+
+  .book-shorcuts a {
+    margin-right: 20px;
+    margin-left: 20px;
+  }
+
+  .pointer-cursor {
+    cursor: pointer;
+  }
+
+
+  .owl-carousel {
+    margin: auto;
+    width: 75%;
+  }
+
+  .owl-prev {
+    width: 15px;
+    height: 100px;
+    position: absolute;
+    top: 40%;
+    margin-left: -20px;
+    display: block !important;
+    border: 0px solid black;
+    background-color: #28a745 !important;
+  }
+
+  .owl-next {
+    width: 15px;
+    height: 100px;
+    position: absolute;
+    top: 40%;
+    right: -25px;
+    display: block !important;
+    border: 0px solid black;
+    background-color: #28a745 !important;
+  }
+
+  .owl-prev i,
+  .owl-next i {
+    transform: scale(1, 6);
+    color: #ccc;
+  }
+</style>
+{{> navbar}}
+<div style="text-align: center;">
+  <h3>Gracias por tu compra</h3>
+  <a href="myorders">Ver Pedidos</a>
+</div>
+{{> packages}}
+
+{{> footer}}

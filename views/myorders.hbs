@@ -1,0 +1,70 @@
+{{> header}}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+{{> navbar}}
+<div style="width: 80%;margin: auto;">
+<h3>Pedidos</h3>
+<table id="example" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>ID Pedido</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>Fecha</th>
+            <th>Dirección</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Factura</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each pedidos}}
+        <tr>
+            <td>{{this.pedido}}</td>
+            <td>{{this.nombre}}</td>
+            <td>{{this.apellido}}</td>
+            <td>{{this.email}}</td>
+            <td>{{this.fechastr}}</td>
+            <td>{{this.direccionstr}}</td>
+            <td>${{this.total}}</td>
+            <td>
+                {{#if this.stzero}}Pendiente{{/if}}
+                {{#if this.stone}}Enviado{{/if}}
+                {{#if this.sttwo}}Entregado{{/if}}
+            </td>
+            <td>
+                <form action="/myinvoice" method="GET">
+                    <input hidden name="pedido" value="{{this.pedido}}">
+                    <button type="submit">Ver</button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>ID Pedido</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>Fecha</th>
+            <th>Dirección</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Factura</th>
+        </tr>
+    </tfoot>
+</table>
+</div>
+{{> packages}}
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "sDom": '<"wrapper"lfptip>'
+        });
+    });
+</script>
+
+{{> footer}}

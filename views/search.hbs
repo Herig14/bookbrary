@@ -1,0 +1,316 @@
+{{> header}}
+<style>
+    .enlace {
+        color: black;
+    }
+
+    .pointer-cursor {
+        cursor: pointer;
+    }
+
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    .btn:focus {
+        outline: none;
+        box-shadow: none;
+        background-color: rgba(0, 0, 0, 0);
+        color: rgb(108, 117, 125);
+    }
+
+    .cart-container {
+        width: 80%;
+        margin: auto;
+
+    }
+
+    .cart-item {
+        width: 100%;
+        background-color: white;
+        margin: auto;
+        height: 140px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    .item-cover {
+        width: 100px !important;
+        height: 140px;
+        background-color: black;
+        display: inline-block;
+    }
+
+    .item-content {
+        padding-left: 5px;
+        overflow: hidden;
+        display: inline;
+
+    }
+
+    .item-title {
+        max-width: 50%;
+        max-height: 40px;
+        overflow: hidden;
+        display: inline-block;
+        vertical-align: top;
+        text-overflow: ellipsis;
+        line-height: 1.2;
+        margin-top: 5px;
+
+    }
+
+    .item-author {
+        position: relative;
+        overflow: hidden;
+        margin-left: 110px;
+        margin-top: -90px;
+        color: #00A86B;
+        max-height: 30px;
+        max-width: 30%;
+    }
+
+    .item-qty {
+        position: relative;
+        margin-left: 80%;
+        margin-top: -40px;
+        text-align: center;
+        width: 120px;
+    }
+
+    .item-qty input {
+        width: 50px !important;
+        text-align: center
+    }
+
+    .input-group {
+        width: 120px
+    }
+
+    .btn-qty {
+        width: 36px
+    }
+
+    .item-price {
+        font-size: 25px;
+        position: absolute;
+        right: 1%;
+        font-size: 25px;
+    }
+
+    .item-drop {
+        position: absolute;
+        top: 0px;
+        right: 1%;
+        color: #696969;
+        cursor: pointer;
+    }
+
+    .book-shorcuts {
+        position: absolute;
+        left: 110px;
+        bottom: 20px;
+    }
+
+    .mob-only {
+        display: none;
+    }
+
+    .mob-only-2 {
+        display: none;
+    }
+
+
+    @media only screen and (max-width: 768px) {
+        .cart-container {
+            width: 100%;
+        }
+
+        .item-author {
+
+            max-width: 50%;
+        }
+    }
+
+    @media only screen and (max-width: 570px) {
+        html {
+            overflow-x: hidden;
+        }
+
+        .mob-marg {
+            margin-left: 10px;
+        }
+
+        .mob-only {
+            display: inline;
+            cursor: pointer;
+        }
+
+        .mob-only-2 {
+            cursor: pointer;
+        }
+
+        .mb-autores {
+            display: none;
+        }
+    }
+
+    .lbl-chck {
+        display: inline-block;
+        width: 100px;
+        height: 23px;
+        overflow: hidden;
+        vertical-align: text-top;
+        margin: 0
+    }
+</style>
+{{> navbar}}
+<div id="cart-container" class="cart-container">
+    <h2 style="text-align: center;">Resultados</h2>
+    <hr>
+
+{{#if contenido}}
+    <input hidden id="fc" type="text" value="chck">
+    <div class="row">
+        <div class="col-sm-3 mob-marg">
+            <div> Autores <span id='desp' class="mob-only" onclick="desplegar()">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                    </svg>
+                </span>
+
+                <span id='pleg' class="mob-only-2" onclick="plegar()">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-up" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z" />
+                    </svg>
+                </span>
+            </div>
+
+            <div class="mb-autores" id="autores">
+                {{#each autores}}
+                <input type="checkbox" onclick='displayhide("{{this.autor}}","autor",this)'>
+                <label for="vehicle1" class="lbl-chck">{{this.autor}}</label><br>
+                {{/each}}
+            </div>
+
+        </div>
+        <div class="col-sm-9">
+            {{#each libros}}
+            <div class="cart-item" id="c{{this.codigo}}">
+                <div class="item-cover">
+                    <a class="enlace" href="/book?isbn={{this.codigo}}"><img width="100" height="140"
+                            src="data:image/jpg;base64,{{this.img}}"></a>
+                </div>
+                <div class="item-content">
+                    <a class="enlace" href="/book?isbn={{this.codigo}}">
+                        <div class="item-title"> {{this.titulo}}</div>
+                    </a>
+                    <div class="item-author">{{this.autor}} </div>
+                    {{!-- <div style="margin-left: 100px;">score:{{this.score}}</div> --}}
+                    <div class="item-price">$ {{this.preciostr}}</div>
+                    <div class="book-shorcuts">
+                        {{#if this.disp}}<span style="color: #28a745 ;">En stock</span>{{else}}<span
+                            style="color: red ;">Sin
+                            Stock</span>{{/if}}
+                        <a class="pointer-cursor" onclick="addcart('{{this.codigo}}')"><img
+                                src="/assets/svg/carrito-de-compras.svg" style="height: 30px;padding: 1px;"></a>
+                    </div>
+                    {{!--  <div class="item-drop" onclick="dropitem('{{this.codigo}}')">X</div> --}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+{{else}}
+<h3 style="text-align: center;">No encontramos el libro que estás buscando 🥺</h3>
+{{/if}}
+
+</div>
+
+{{> packages}}
+<script>
+    function desplegar() {
+        document.getElementById('autores').style.display = 'block'
+        document.getElementById('pleg').style.display = 'inline'
+        document.getElementById('desp').style.display = 'none'
+    }
+    function plegar() {
+        document.getElementById('autores').style.display = 'none'
+        document.getElementById('desp').style.display = 'inline'
+        document.getElementById('pleg').style.display = 'none'
+    }
+    function displayhide(valor, campo, elemento) {
+        //document.getElementById('c8647699183').childNodes[3].childNodes[1].childNodes[1].textContent
+        let docs = document.getElementsByClassName('cart-item')
+        let state = 0
+        if (campo == 'autor') {
+            for (var i = 0; i < docs.length; i++) {
+                if (document.getElementById('fc').value == 1 && !elemento.checked && (state == 0 || state == 1)) {
+                    docs[i].style.display = 'block'
+                    state = 1
+                    continue
+                }
+                if (docs[i].childNodes[3].childNodes[3].textContent.trim() == valor.trim()) {
+                    if (document.getElementById('fc').value == 'chck') {
+                        docs[i].style.display = 'block'
+                    } else {
+                        if (elemento.checked) {
+                            docs[i].style.display = 'block'
+                            if (state != 2) {
+                                document.getElementById('fc').value = Number(document.getElementById('fc').value) + 1
+                                state = 2
+                            }
+                        } else {
+                            docs[i].style.display = 'none'
+                            if (state != 3) {
+                                document.getElementById('fc').value = Number(document.getElementById('fc').value) - 1
+                                state = 3
+                            }
+
+                        }
+                    }
+                } else {
+                    if (document.getElementById('fc').value == 'chck') {
+                        docs[i].style.display = 'none'
+
+                    }
+                }
+            }
+            if (state == 1) {
+                document.getElementById('fc').value = 'chck'
+            }
+            if (state == 0) {
+                document.getElementById('fc').value = '1'
+            }
+        }
+    }
+    function addcart(isbn) {
+        $.ajax({
+            type: 'GET',
+            url: '/addcart',
+            data: { isbn: isbn, nbooks: -1 },
+            dataType: 'json'                              // <-- add this
+            //contentType: 'application/json; charset=utf-8' // <-- remove this
+        })
+            .done(function (result) {
+                document.getElementById("nitems").innerHTML = result.nitems
+            })
+            .fail(function (xhr, status, error) {
+            })
+            .always(function (data) {
+            });
+    }
+</script>
+{{> footer}}

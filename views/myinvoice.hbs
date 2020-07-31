@@ -1,0 +1,38 @@
+{{> header}}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+{{> navbar}}
+<div style="width: 80%;margin: auto">
+<h3>Factura #{{factura.pedido}}</h3>
+<table id="example" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>ISBN</th>
+            <th>Titulo</th>
+            <th>Cantidad</th>
+            <th>Precio($)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each libros}}
+        <tr>
+            <td>{{this.codigo}}</td>
+            <td>{{this.titulo}}</td>
+            <td>{{this.cantidad}}</td>
+            <td>{{this.preciostr}}</td>
+        </tr>
+        {{/each}}
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Total: </td>
+            <td>{{factura.total}}</td>
+        <tr>
+    </tbody>
+</table>
+</div>
+{{> packages}}
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
+
+{{> footer}}

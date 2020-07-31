@@ -1,0 +1,101 @@
+{{> header}}
+<style>
+  body {
+    display: -ms-flexbox;
+    display: -webkit-box;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #f5f5f5;
+  }
+</style>
+
+<form id="registerform" class="form-signin text-center" action="/signup" method="POST"
+  onsubmit="return ConfirmPassword()">
+  <a class="nav-link" style="color: black" href="/"><h2 style=" font-family: 'Roboto';font-weight: bold;">Bookbrary</h2></a>
+
+  <h1 class="h3 mb-3 font-weight-normal">Registrarse</h1>
+
+  <label for="inputName" class="sr-only">Nombre Completo</label>
+  <input type="text" autocomplete="off"  name="nombre" id="inputName" onkeydown="return alphaOnly(event);" class="form-control register"
+    placeholder="Nombre Completo" required="" autofocus="">
+
+  <label for="inputUserame" class="sr-only">Nombre de Usuario</label>
+  <input type="text" autocomplete="off"  name="username" id="inputUserame" onkeydown="return alphanumericOnly(event);"
+    class="form-control register" placeholder="Nombre de Usuario" required="" autofocus="">
+
+  <label for="inputEmail" class="sr-only" >Email</label>
+  <input type="email" autocomplete="off" name="email" onpaste="getPastedValue(this)" id="inputEmail" class="form-control"
+    placeholder="Email" required="" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+  <small class="form-text text-muted text-left register" id="emailver"></small>
+
+  <label for="inputPassword"  class="sr-only">Contraseña</label>
+  <input type="password" autocomplete="off" name="password" id="inputPassword" class="form-control " placeholder="Contraseña"
+    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required="">
+  <small class="form-text text-muted text-left register">Debe contener <span id="letter">una minúscula</span>, <span
+      id="capital">una mayúscula</span>, <span id="number">un número</span> y <span id="lenght">al menos 8 caracteres.
+    </span></small>
+  <label for="inputCPassword" class="sr-only">Confirmar Contraseña</label>
+  <input type="password" autocomplete="off" id="inputCPassword" class="form-control register" placeholder="Confirmar Contraseña"
+    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required="">
+  <small class="form-text text-muted text-left"><span id="confmsg"></span></small>
+  <div class="checkbox mb-3">
+
+  </div>
+  <a href="/login">¿Ya estás registrado?</a>
+  <button class="btn btn-lg  btn-success btn-block" type="submit">Crear Cuenta</button>
+</form>
+<script src="/assets/js/signup-helpers.js"></script>
+{{> packages}}
+<script>
+  function getPastedValue(obj) {
+  }
+  function alphaOnly(event) {
+    var key = event.keyCode;
+    return ((key >= 65 && key <= 90) || key == 8 || key == 9 || key == 32);
+  };
+  function alphanumericOnly(event) {
+    var key = event.keyCode;
+    return ((key >= 65 && key <= 90) || key == 8 || key == 9 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+  };
+  function ValidateEmail(mail) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+      return (true)
+    }
+    // alert("You have entered an invalid email address!")
+    return (false)
+  }
+  $(document).ready(function () {
+    $("#inputEmail").on('keyup blur', function () {
+      emailb = ValidateEmail(document.getElementById("inputEmail").value)
+      if (emailb) {
+        $.ajax({
+          type: 'GET',
+          url: '/emails',
+          data: { emailt: document.getElementById("inputEmail").value },
+          dataType: 'json'                              // <-- add this
+          //contentType: 'application/json; charset=utf-8' // <-- remove this
+        })
+          .done(function (result) {
+            if (result.exist) {
+              document.getElementById("emailver").innerHTML = '<span style="color: red;">Email ya registrado</span>'
+              document.getElementById("inputEmail").setCustomValidity('El correo ya está resgistrado');
+            } else {
+              document.getElementById("emailver").innerHTML = '<span style="color: green;">Email disponible</span>'
+              document.getElementById("inputEmail").setCustomValidity('');
+            }
+          })
+          .fail(function (xhr, status, error) {
+          })
+          .always(function (data) {
+          });
+      } else {
+        document.getElementById("emailver").innerHTML = '<span style="color: red;">Email Inválido</span>'
+      }
+    });
+  });
+</script>
+{{> footer}}

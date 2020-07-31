@@ -1,0 +1,405 @@
+{{> header}}
+<style>
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .disable-select {
+        user-select: none;
+        /* supported by Chrome and Opera */
+        -webkit-user-select: none;
+        /* Safari */
+        -khtml-user-select: none;
+        /* Konqueror HTML */
+        -moz-user-select: none;
+        /* Firefox */
+        -ms-user-select: none;
+        /* Internet Explorer/Edge */
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    .btn:focus {
+        outline: none;
+        box-shadow: none;
+        background-color: rgba(0, 0, 0, 0);
+        color: rgb(108, 117, 125);
+    }
+
+    .cart-container {
+        width: 800px;
+        margin: auto;
+
+    }
+
+    .cart-item {
+        width: 100%;
+        background-color: white;
+        margin: auto;
+        height: 140px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    .item-cover {
+        width: 100px !important;
+        height: 140px;
+        background-color: black;
+        display: inline-block;
+    }
+
+    .item-content {
+        padding-left: 5px;
+        overflow: hidden;
+        display: inline;
+
+    }
+
+    .item-title {
+        max-width: 50%;
+        max-height: 40px;
+        overflow: hidden;
+        display: inline-block;
+        vertical-align: top;
+        text-overflow: ellipsis;
+        line-height: 1.2;
+        margin-top: 5px;
+
+    }
+
+    .item-author {
+        position: relative;
+        overflow: hidden;
+        margin-left: 110px;
+        margin-top: -90px;
+        color: #00A86B;
+        max-height: 30px;
+        max-width: 30%;
+    }
+
+    .item-qty {
+        position: relative;
+        margin-left: 80%;
+        margin-top: -40px;
+        text-align: center;
+        width: 120px;
+    }
+
+    .item-qty input {
+        width: 50px !important;
+        text-align: center
+    }
+
+    .input-group {
+        width: 120px
+    }
+
+    .btn-qty {
+        width: 36px
+    }
+
+    .item-price {
+        margin-left: 500px;
+        margin-top: -40px;
+        font-size: 20px;
+    }
+
+    .item-drop {
+        position: absolute;
+        top: 0px;
+        right: 1%;
+        color: #696969;
+        cursor: pointer;
+    }
+
+    .total {
+        text-align: right;
+        display: block;
+        font-size: 25px;
+        margin-right: 5px;
+        margin-bottom: 10px;
+    }
+
+    @media only screen and (max-width: 768px) {
+        .cart-container {
+            width: 100%;
+        }
+
+        .item-qty {
+            position: relative;
+            margin-left: 65%;
+            margin-top: -30px;
+            text-align: center;
+            width: 120px;
+        }
+
+        .qty-lbl {
+            position: relative;
+            top: 68px;
+        }
+
+        .btn-qty {
+            text-align: center !important;
+            width: 30px
+        }
+
+        .item-price {
+            margin-left: 120px;
+        }
+
+        .item-author {
+
+            max-width: 50%;
+        }
+
+
+    }
+</style>
+{{> navbar}}
+<div id="cart-container" class="cart-container">
+    <h2 style="text-align: center;">Carrito</h2>
+    <hr>
+    {{#if lleno}}
+    {{#each items}}
+    <div class="cart-item" id="c{{this.codigo}}">
+        <div class="item-cover">
+            <img width="100" height="140" src="data:image/jpg;base64,{{this.img}}">
+        </div>
+        <div class="item-content">
+            <div class="item-title"> {{this.titulo}}</div>
+            <div class="item-author">{{this.autor}}</div>
+            <div class="item-qty">
+                <label class="qty-lbl">Cantidad</label>
+                <div class="input-group qty">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary btn-qty" type="button" id="removeone"
+                            onclick="removeone('{{this.codigo}}','{{this.precio}}')">-</button>
+                    </div>
+                    <input readonly type="number" id="{{this.codigo}}" class=""
+                        aria-label="Example text with button addon" aria-describedby="button-addon1"
+                        value="{{this.cantidad}}">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary btn-qty" type="button" id="addone"
+                            onclick="addone('{{this.codigo}}',{{this.stock}})">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="item-price">$ {{this.preciostr}}</div>
+            <div class="item-drop disable-select" onclick="dropitem('{{this.codigo}}')">X</div>
+        </div>
+    </div>
+    {{/each}}
+    <div id="message" style="display: none;">
+        <h3 style="text-align: center;">No hay nada en el carrito </h3>
+        <h1 style="text-align: center;">🥺</h1>
+        <h3 style="text-align: center;"><a class="btn btn-success" href="/">Empezar a comprar </a></h3>
+    </div>
+    <div> <span id="total" class="total">Total: ${{total}}</span></div>
+    {{#if loged}}
+    <div id="paypal-button-container"></div>
+    {{else}}
+    <div id="messagelogin" style="text-align: center;"> Inicia sesión o Regístrate para finalizar la compra </div>
+    {{/if}}
+    {{else}}
+    <div>
+        <h3 style="text-align: center;">No hay nada en el carrito </h3>
+        <h1 style="text-align: center;">🥺</h1>
+        <h3 style="text-align: center;"><a class="btn btn-success" href="/">Empezar a comprar </a></h3>
+    </div>
+    {{/if}}
+
+</div>
+{{> packages}}
+<script
+    src="https://www.paypal.com/sdk/js?client-id=AQFPDi3zILzpF-omA0CzKEn9Vjz8QEoFMpN3jR3HBgfTt2uAXpvAEDc9e7huwLhV9Jp70_QOJGWbFrxK"></script>
+<script>
+    if (document.getElementById("paypal-button-container") != null) {
+        paypal.Buttons({
+            createOrder: function (data, actions) {
+                // This function sets up the details of the transaction, including the amount and line item details.
+
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: "{{total}}"
+                        }
+                    }]
+                });
+            },
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    // This function captures the funds from the transaction.
+                    $.ajax({
+                        credentials: 'same-origin',
+                        type: 'POST',
+                        url: '/addorder',
+                        data: { details },
+                        dataType: 'json'                              // <-- add this
+                        //contentType: 'application/json; charset=utf-8' // <-- remove this
+                    }).done(function (result) {
+                        $.ajax({
+                            credentials: 'same-origin',
+                            type: 'POST',
+                            url: '/dropallcart',
+                            dataType: 'json'                              // <-- add this
+                            //contentType: 'application/json; charset=utf-8' // <-- remove this
+                        }).done(function (result) {
+                            window.location = "/thanks";
+                        }).fail(function (xhr, status, error) {
+                        })
+                    }).fail(function (xhr, status, error) {
+                    })
+                });
+            }
+        }).render('#paypal-button-container');
+    }
+  //This function displays Smart Payment Buttons on your web page.
+</script>
+<script>
+    function gettotal() {
+        $.ajax({
+            type: 'GET',
+            url: '/cart',
+            data: { ajax: true },
+            dataType: 'json'                              // <-- add this
+            //contentType: 'application/json; charset=utf-8' // <-- remove this
+        })
+            .done(function (result) {
+                document.getElementById('total').innerHTML = "Total: $" + result.total
+
+                if (document.getElementById("paypal-button-container") != null) {
+                    document.getElementById('paypal-button-container').innerHTML = ''
+
+
+                    paypal.Buttons({
+                        createOrder: function (data, actions) {
+                            // This function sets up the details of the transaction, including the amount and line item details.
+                            return actions.order.create({
+                                purchase_units: [{
+                                    amount: {
+                                        value: result.total
+                                    }
+                                }]
+                            });
+                        },
+                        onApprove: function (data, actions) {
+                            return actions.order.capture().then(function (details) {
+                                // This function captures the funds from the transaction.
+                                $.ajax({
+                                    credentials: 'same-origin',
+                                    type: 'POST',
+                                    url: '/addorder',
+                                    data: { details },
+                                    dataType: 'json'                              // <-- add this
+                                    //contentType: 'application/json; charset=utf-8' // <-- remove this
+                                }).done(function (result) {
+                                    $.ajax({
+                                        credentials: 'same-origin',
+                                        type: 'POST',
+                                        url: '/dropallcart',
+                                        dataType: 'json'                              // <-- add this
+                                        //contentType: 'application/json; charset=utf-8' // <-- remove this
+                                    }).done(function (result) {
+                                        window.location = "/thanks";
+                                    }).fail(function (xhr, status, error) {
+                                    })
+                                }).fail(function (xhr, status, error) {
+                                })
+                            });
+                        }
+                    }).render('#paypal-button-container');
+                }
+            })
+            .fail(function (xhr, status, error) {
+            })
+            .always(function (data) {
+            });
+
+    }
+    function addone(id, stock) {
+        if (parseInt(document.getElementById(id).value, 10) < stock) {
+            document.getElementById(id).value = parseInt(document.getElementById(id).value, 10) + 1
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: '/addcart',
+            data: { isbn: id, nbooks: document.getElementById(id).value },
+            dataType: 'json'                              // <-- add this
+            //contentType: 'application/json; charset=utf-8' // <-- remove this
+        })
+            .done(function (result) {
+                gettotal()
+            })
+            .fail(function (xhr, status, error) {
+            })
+            .always(function (data) {
+            });
+
+
+    }
+
+    function removeone(id, precio) {
+
+        if (parseInt(document.getElementById(id).value, 10) > 1) {
+            document.getElementById(id).value = parseInt(document.getElementById(id).value, 10) - 1
+
+            $.ajax({
+                type: 'GET',
+                url: '/removecart',
+                data: { isbn: id },
+                dataType: 'json'                              // <-- add this
+                //contentType: 'application/json; charset=utf-8' // <-- remove this
+            })
+                .done(function (result) {
+                    gettotal()
+                })
+                .fail(function (xhr, status, error) {
+                })
+                .always(function (data) {
+                });
+        }
+
+
+
+    }
+    function dropitem(id) {
+        $.ajax({
+            type: 'GET',
+            url: '/removecart',
+            data: { isbn: id, all: true },
+            dataType: 'json'                              // <-- add this
+            //contentType: 'application/json; charset=utf-8' // <-- remove this
+        })
+            .done(function (result) {
+                gettotal()
+                document.getElementById('c' + id).remove()
+                document.getElementById("nitems").innerHTML = result.nitems
+                if (result.nitems == 0) {
+                    document.getElementById('message').style.display = "block"
+                    if (document.getElementById("paypal-button-container") != null) {
+                        document.getElementById("paypal-button-container").style.display = 'none'
+                    }
+
+                    document.getElementById('total').style.display = 'none'
+                    document.getElementById('messagelogin').style.display = 'none'
+                    //messagelogin   
+                }
+            })
+            .fail(function (xhr, status, error) {
+            })
+            .always(function (data) {
+            });
+    }
+    function numericOnly() {
+        var key = event.key;
+        return
+    };
+</script>
+{{> footer}}

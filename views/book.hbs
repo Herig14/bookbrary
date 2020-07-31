@@ -1,0 +1,232 @@
+{{> header}}
+{{!-- <link rel="stylesheet" href="assets/css/owlcarousel/owl-carousel-min.css">
+<link rel="stylesheet" href="assets/css/owlcarousel/owl-theme-default-min.css"> --}}
+<link rel="stylesheet" href="assets/css/jquery.scrollbar.css">
+<style>
+    .jumbotron {
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+
+    .rel-item {
+        width: 100%;
+        background-color: white;
+        position: relative;
+        margin-bottom: 5px;
+    }
+
+    .item-cover {
+        width: 100px !important;
+        height: 140px;
+        background-color: black;
+        display: inline-block;
+    }
+
+    .item-title {
+        max-height: 11rem;
+        overflow: hidden;
+        vertical-align: top;
+        text-overflow: ellipsis;
+        margin-top: 5px;
+        text-align: justify;
+    }
+
+    .readmore {
+        cursor: pointer;
+    }
+
+    .book-shorcuts {
+        display: inline-block;
+        position: absolute;
+        right: 10px;
+
+    }
+
+    .book-shorcuts a {
+        margin-right: 20px;
+        margin-left: 20px;
+    }
+
+    .pointer-cursor {
+        cursor: pointer;
+    }
+
+    .precio {
+        display: inline-block;
+        left: 6%;
+        font-size: 22px;
+        margin-bottom: 10px;
+
+    }
+
+
+
+    .rel-title {
+        position: absolute;
+        top: 0;
+        margin-left: 110px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 50%;
+    }
+
+    .rel-author {
+        position: absolute;
+        top: 20px;
+        left: 110px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 50%;
+    }
+
+    .book-shorcuts-rel {
+        position: absolute;
+        top: 100px;
+        right: 10px;
+    }
+
+    .rel-price {
+        position: absolute;
+        bottom: 5px;
+        left: 120px;
+    }
+
+
+
+    @media only screen and (min-width: 991px) {
+        .rels {
+            max-height: 460px;
+            overflow-y: scroll;
+        }
+
+    }
+</style>
+{{> navbar}}
+
+
+<hr>
+<h2 style="text-align: center;font-weight: 100;"></h2>
+
+<div class="container" style="max-width:100% ;">
+    <div class="row">
+        <div class="col-lg-8 col-12">
+            <div class="jumbotron">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-auto">
+                            <div class="item-cover"><img width="100" height="140"
+                                    src="data:image/jpg;base64,{{libro.img}}"></div>
+                        </div>
+                        <div class="col-md-auto">
+                            <h3>{{libro.titulo}}</h3>
+                            <div>Autor: {{libro.autor}}</div>
+                            <div>Categoria: {{libro.categoria}}</div>
+                            <div>Género: {{libro.genero}}</div>
+                            <div>Editorial: {{libro.editorial}}</div>
+
+                        </div>
+                    </div>
+                </div>
+                <h4>Descripción</h4>
+                <hr>
+                <div id="titulo" class="item-title">
+                    <p class="lead">{{libro.descripcion}}</p>
+                </div>
+                <div><a id='showmore' class="readmore" onclick="showmore()"> + Mostrar más</a></div>
+                <div><a id='showless' class="readmore" onclick="showless()" style="display: none;"> + Mostrar menos</a>
+                </div>
+                <hr>
+                <div class="precio">${{libro.preciostr}}</div>
+                <div class="book-shorcuts">
+                    {{#if libro.disp}}<span style="color: #28a745 ;">En stock</span>{{else}}<span
+                        style="color: red ;">Sin
+                        Stock</span>{{/if}}
+                    <a class="pointer-cursor" onclick="addcart('{{libro.codigo}}')"><img
+                            src="/assets/svg/carrito-de-compras.svg" style="height: 40px;padding: 1px;"></a>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="col-sm ">
+            <h3>Relacionados</h3>
+            <div class="rels scrollbar-rail" id="rels">
+                {{#each libros}}
+                <div class="rel-item" id="c{{this.codigo}}">
+                    <div class="rel-cover">
+                        <a class="enlace" href="/book?isbn={{this.codigo}}"><img width="100" height="140"
+                                src="data:image/jpg;base64,{{this.img}}"></a>
+                    </div>
+                    <div class="rel-content">
+                        <a class="enlace" href="/book?isbn={{this.codigo}}">
+                            <div class="rel-title"> {{this.titulo}}</div>
+                        </a>
+                        <div class="rel-author">{{this.autor}} </div>
+                        {{!-- <div style="margin-left: 100px;">score:{{this.score}}</div> --}}
+                        <div class="rel-price">$ {{this.preciostr}}</div>
+                        <div class="book-shorcuts-rel">
+                            {{#if this.disp}}<span style="color: #28a745 ;">En stock</span>{{else}}<span
+                                style="color: red ;">Sin
+                                Stock</span>{{/if}}
+                            <a class="pointer-cursor" onclick="addcart('{{this.codigo}}')"><img
+                                    src="/assets/svg/carrito-de-compras.svg" style="height: 30px;padding: 1px;"></a>
+                        </div>
+                        {{!--  <div class="item-drop" onclick="dropitem('{{this.codigo}}')">X</div> --}}
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>
+{{>packages}}
+<script src="/assets/js/jquery.scrollbar.js"></script>
+<script>
+    var is_mobile = ((/Mobile|Android|iPhone|iPod|BlackBerry|Windows Phone/i).test(navigator.userAgent || navigator.vendor || window.opera) ? true : false);
+
+    if (!is_mobile) {
+        $(document).ready(function () {
+            $('.scrollbar-rail').scrollbar();
+        });
+    }
+    function showmore() {
+        document.getElementById("titulo").style.maxHeight = '100%'
+        document.getElementById('showmore').style.display = 'none'
+        document.getElementById('showless').style.display = 'block'
+    }
+    function showless() {
+        document.getElementById("titulo").style.maxHeight = '11rem'
+        document.getElementById('showmore').style.display = 'block'
+        document.getElementById('showless').style.display = 'none'
+
+    }
+    $(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/recommended',
+            dataType: 'json'                              // <-- add this
+            //contentType: 'application/json; charset=utf-8' // <-- remove this
+        })
+    });
+    function addcart(isbn) {
+        $.ajax({
+            type: 'GET',
+            url: '/addcart',
+            data: { isbn: isbn, nbooks: -1 },
+            dataType: 'json'                              // <-- add this
+            //contentType: 'application/json; charset=utf-8' // <-- remove this
+        })
+            .done(function (result) {
+                document.getElementById("nitems").innerHTML = result.nitems
+            })
+            .fail(function (xhr, status, error) {
+            })
+            .always(function (data) {
+            });
+    }
+</script>
+
+{{> footer}}

@@ -1,0 +1,255 @@
+{{> header}}
+{{!-- <link rel="stylesheet" href="assets/css/owlcarousel/owl-carousel-min.css">
+<link rel="stylesheet" href="assets/css/owlcarousel/owl-theme-default-min.css"> --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css">
+<style>
+  .separator {
+    height: 5px;
+    background: #198e36;
+    border-bottom: 1px solid #313030;
+    width: 13%;
+    margin-right: auto;
+    margin-left: 13%;
+    margin-bottom: 15px;
+  }
+
+  .header-titulo {
+    text-align: left;
+    margin: auto;
+    width: 75%;
+    font-weight: 100;
+  }
+
+  .book-card {
+    height: 300px;
+    width: 210px !important;
+    background-color: snow;
+    border-radius: 5px;
+    box-shadow: 10px 10px 5px #aaaaaa;
+    margin-bottom: 15px;
+  }
+
+  .enlace {
+    color: black;
+  }
+
+  .enlace:hover {
+    text-decoration: none;
+    color: #00A86B;
+  }
+
+
+  .book-image {
+    height: 140px;
+    width: 100px !important;
+    overflow: hidden;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 10%;
+
+  }
+
+  .book-title {
+    position: relative;
+    margin-top: 30px;
+    text-align: center;
+    overflow: hidden;
+    max-height: 43px;
+    height: 43px;
+  }
+
+  .book-autor {
+    position: relative;
+    text-align: center;
+    margin-top: -5px;
+    color: #00A86B;
+  }
+
+  .book-price {
+    position: relative;
+    margin-top: 1px;
+    text-align: center;
+  }
+
+  .book-shorcuts {
+    display: flex;
+    position: relative;
+    justify-content: center;
+  }
+
+  .book-shorcuts a {
+    margin-right: 20px;
+    margin-left: 20px;
+  }
+
+  .pointer-cursor {
+    cursor: pointer;
+  }
+
+
+  .owl-carousel {
+    margin: auto;
+    width: 75%;
+  }
+
+  .owl-prev {
+    width: 15px;
+    height: 100px;
+    position: absolute;
+    top: 40%;
+    margin-left: -20px;
+    display: block !important;
+    border: 0px solid black;
+    background-color: #28a745 !important;
+  }
+
+  .owl-next {
+    width: 15px;
+    height: 100px;
+    position: absolute;
+    top: 40%;
+    right: -25px;
+    display: block !important;
+    border: 0px solid black;
+    background-color: #28a745 !important;
+  }
+
+  .owl-prev i,
+  .owl-next i {
+    transform: scale(1, 6);
+    color: #ccc;
+  }
+</style>
+{{> navbar}}
+
+
+<hr>
+<h2 class="header-titulo">Más vendidos</h2>
+<div class="separator">
+</div>
+<div class="owl-carousel">
+  {{#each libros}}
+  <div class="book-card">
+    <div class="book-image">
+      <a class="enlace" href="/book?isbn={{this.codigo}}"> <img src="data:image/jpg;base64,{{this.img}}"
+          alt="Card image cap"></a>
+    </div>
+    <div class="book-title">
+      <a class="enlace" href="/book?isbn={{this.codigo}}">
+        <h6>{{this.titulo}}</h6>
+      </a>
+    </div>
+    <div class="book-autor">
+      <span>{{this.autor}}</span>
+    </div>
+    <div class="book-price">
+      <span class="text-muted">$ {{this.preciostr}}</span>
+    </div>
+    <div class="book-shorcuts">
+      {{#if this.disp}}<span style="color: #28a745 ;">En stock</span>{{else}}<span style="color: red ;">Sin
+        Stock</span>{{/if}}
+      <a class="pointer-cursor" onclick="addcart({{this.codigo}})"><img src="/assets/svg/carrito-de-compras.svg"
+          style="height: 30px;width: 30px;padding: 1px;"></a>
+    </div>
+  </div>
+  {{/each}}
+</div>
+<hr>
+{{#if recbool}}
+<h2 class="header-titulo">Relacionado con libros que has mirado</h2>
+<div class="separator"></div>
+<div class="owl-carousel">
+  {{#each recommended}}
+  <div class="book-card">
+    <div class="book-image">
+      <a class="enlace" href="/book?isbn={{this.codigo}}"> <img src="data:image/jpg;base64,{{this.img}}"
+          alt="Card image cap"></a>
+    </div>
+    <div class="book-title">
+      <a class="enlace" href="/book?isbn={{this.codigo}}">
+        <h6>{{this.titulo}}</h6>
+      </a>
+    </div>
+    <div class="book-autor">
+      <span>{{this.autor}}</span>
+    </div>
+    <div class="book-price">
+      <span class="text-muted">$ {{this.preciostr}}</span>
+    </div>
+    <div class="book-shorcuts">
+      {{#if this.disp}}<span style="color: #28a745 ;">En stock</span>{{else}}<span style="color: red ;">Sin
+        Stock</span>{{/if}}
+      <a class="pointer-cursor" onclick="addcart('{{this.codigo}}')"><img src="/assets/svg/carrito-de-compras.svg"
+          style="height: 30px;width: 30px;padding: 1px;"></a>
+    </div>
+  </div>
+  {{/each}}
+</div>
+{{/if}}
+
+<h2 class="header-titulo">Novedades</h2>
+<div class="separator">
+</div>
+<div class="owl-carousel">
+  {{#each novedades}}
+  <div class="book-card">
+    <div class="book-image">
+      <a class="enlace" href="/book?isbn={{this.codigo}}"> <img src="data:image/jpg;base64,{{this.img}}"
+          alt="Card image cap"></a>
+    </div>
+    <div class="book-title">
+      <a class="enlace" href="/book?isbn={{this.codigo}}">
+        <h6>{{this.titulo}}</h6>
+      </a>
+    </div>
+    <div class="book-autor">
+      <span>{{this.autor}}</span>
+    </div>
+    <div class="book-price">
+      <span class="text-muted">$ {{this.preciostr}}</span>
+    </div>
+    <div class="book-shorcuts">
+      {{#if this.disp}}<span style="color: #28a745 ;">En stock</span>{{else}}<span style="color: red ;">Sin
+        Stock</span>{{/if}}
+      <a class="pointer-cursor" onclick="addcart({{this.codigo}})"><img src="/assets/svg/carrito-de-compras.svg"
+          style="height: 30px;width: 30px;padding: 1px;"></a>
+    </div>
+  </div>
+  {{/each}}
+</div>
+
+{{> packages}}
+
+<script src="assets/js/owl.carousel.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $(".owl-carousel").owlCarousel({
+      stagePadding: 50,
+      nav: true,
+      margin: 10,
+      center: true,
+      autoWidth: true,
+      loop: true
+    });
+
+  });
+  function addcart(isbn) {
+    $.ajax({
+      type: 'GET',
+      url: '/addcart',
+      data: { isbn: isbn, nbooks: -1 },
+      dataType: 'json'                              // <-- add this
+      //contentType: 'application/json; charset=utf-8' // <-- remove this
+    })
+      .done(function (result) {
+        document.getElementById("nitems").innerHTML = result.nitems
+      })
+      .fail(function (xhr, status, error) {
+      })
+      .always(function (data) {
+      });
+  }
+</script>
+{{> footer}}

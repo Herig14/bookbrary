@@ -1,0 +1,238 @@
+{{> header}}
+<style>
+    .editar {
+        cursor: pointer;
+    }
+
+    .ocultar {
+        display: none;
+    }
+</style>
+{{> navbar}}
+
+<input hidden id="emailp" value="{{usuario.email}}">
+<div class="container" style="max-width: 800px;">
+
+    {{!-- <a class="nav-link" style="color: black" href="/"><h2 style=" font-family: 'Roboto';font-weight: bold;">Bookbrary</h2></a> --}}
+    <h1 class="h3 mb-3 font-weight-normal">Mi Perfil</h1>
+    <div class="form-group row ">
+        <label for="inputName" class="col-sm-3 col-form-label">Nombre Completo: </label>
+        <div class="col-sm-9">
+            <div class="input-group mb-3">
+                <input type="text" autocomplete="off" name="nombre" id="inputName" onkeydown="return alphaOnly(event);"
+                    readonly class="form-control" placeholder="Nombre Completo" required="" autofocus=""
+                    value="{{usuario.nombre}}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" id="inputNameC" type="button"
+                        onclick="editar('inputName')">Editar</button>
+                </div>
+                <div class="input-group-append ocultar" id="inputNameOK">
+                    <button class="btn btn-outline-secondary" type="button"
+                        onclick="addchange('inputName','nombre')">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="inputUserame" class="col-sm-3 col-form-label">Nombre de Usuario:
+        </label>
+        <div class="col-sm-9">
+            <div class="input-group mb-3">
+                <input type="text" autocomplete="off" name="username" id="inputUserame"
+                    onkeydown="return alphanumericOnly(event);" readonly class="form-control"
+                    placeholder="Nombre de Usuario" required="" autofocus="" value="{{usuario.username}}">
+                <div class="input-group-append" id="inputUserameC">
+                    <button class="btn btn-outline-secondary" type="button"
+                        onclick="editar('inputUserame')">Editar</button>
+                </div>
+                <div class="input-group-append ocultar" id="inputUserameOK">
+                    <button class="btn btn-outline-secondary" type="button"
+                        onclick="addchange('inputUserame','username')">OK</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputEmail" class="col-sm-3 col-form-label">Email: </label>
+        <div class="col-sm-9">
+            <div class="input-group mb-3">
+                <input type="email" autocomplete="off" name="email" onpaste="getPastedValue(this)" id="inputEmail"
+                    readonly class="form-control" placeholder="Email" required=""
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" value="{{usuario.email}}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="inputEmailC"
+                        onclick="editar('inputEmail')">Editar</button>
+                </div>
+                <div class="input-group-append ocultar" id="inputEmailOK">
+                    <button class="btn btn-outline-secondary" type="button"
+                        onclick="addchange('inputEmail','email')">OK</button>
+
+                </div>
+            </div>
+            <small class="form-text text-muted text-left" id="emailver"></small>
+        </div>
+    </div>
+    <input hidden name="idusuario" value="{{usuario._id}}">
+
+    <div id="cpass" class="ocultar">
+            <div class="form-group row">
+                <label for="apassword" class="col-sm-3 col-form-label">Contraseña Actual</label>
+                <div class="col-sm-9">
+                    <input type="password" autocomplete="off" id="apassword" name="apassword"
+                        class="form-control register" placeholder="Contraseña actual"
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+                    <small class="form-text text-muted text-left"><span id="actual"></span></small>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="npassword" class="col-sm-3 col-form-label">Contraseña</label>
+                <div class="col-sm-9">
+                    <input type="password" autocomplete="off" name="npassword" id="inputPassword" class="form-control "
+                        placeholder="Contraseña" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+                    <small class="form-text text-muted text-left register">Debe contener <span id="letter">una
+                            minúscula</span>,
+                        <span id="capital">una mayúscula</span>, <span id="number">un número</span> y <span
+                            id="lenght">al
+                            menos
+                            8
+                            caracteres.
+                        </span></small>
+                </div>
+            </div>
+
+
+            <div class="form-group row">
+                <label for="cnpassword" class="col-sm-3 col-form-label">Confirmar Contraseña</label>
+                <div class="col-sm-9">
+                    <input type="password" autocomplete="off" id="inputCPassword" class="form-control register"
+                        placeholder="Confirmar Contraseña" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onkeyup="ConfirmPassword()">
+                    <small class="form-text text-muted text-left"><span id="confmsg"></span></small>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-success" id="" onclick="changepass()">Cambiar Contraseña</button>
+            </div>
+        
+    </div>
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-success" id="bpass" onclick="dpass()">Cambiar Contraseña</button>
+    </div>
+</div>
+<script src="/assets/js/signup-helpers.js"></script>
+{{> packages}}
+<script>
+    function addchange(elemento, atributo) {
+        if (atributo == 'email') {
+            if (!document.getElementById("inputEmail").validity.valid) {
+                return
+            }
+        }
+
+        $.ajax({
+            credentials: 'same-origin',
+            type: 'POST',
+            url: '/change',
+            data: { data: document.getElementById(elemento).value, atr: atributo },
+            dataType: 'json'                              // <-- add this
+            //contentType: 'application/json; charset=utf-8' // <-- remove this
+        })
+            .done(function (result) {
+                document.getElementById(elemento + "OK").style.display = 'none'
+                document.getElementById(elemento + "C").style.display = 'block'
+                $("#" + elemento).prop('readonly', true);
+            })
+            .fail(function (xhr, status, error) {
+            })
+            .always(function (data) {
+            });
+    }
+    function changepass() {
+        if (document.getElementById('inputPassword').value == document.getElementById('inputCPassword').value && document.getElementById("inputPassword").validity.valid && document.getElementById("apassword").validity.valid) {
+            $.ajax({
+                credentials: 'same-origin',
+                type: 'POST',
+                url: '/change',
+                data: { apassword: document.getElementById('apassword').value, atr: 'password', npassword: document.getElementById('inputPassword').value },
+                dataType: 'json'                              // <-- add this
+                //contentType: 'application/json; charset=utf-8' // <-- remove this
+            })
+                .done(function (result) {
+                    if(result.ok){
+                        document.getElementById('cpass').innerHTML = '<h3>Contraseña Cambiada</h3>'
+                    }else{
+                        document.getElementById('apassword').value = ''
+                        document.getElementById('actual').innerHTML = 'Vuelva a introducir la Contraseña'
+                         document.getElementById('actual').style.color = 'red'
+                    }
+                })
+                .fail(function (xhr, status, error) {
+                })
+                .always(function (data) {
+                });
+        }else{
+            //document.getElementById('confmsg').innerHTML= 'Las contraseñas no coinciden'
+        }
+    }
+    function editar(id) {
+        $("#" + id).prop('readonly', false);
+        //document.getElementById(id).classList.remove("form-control-plaintext")
+        document.getElementById(id).classList.add("form-control")
+        document.getElementById(id + "OK").style.display = 'block'
+        document.getElementById(id + "C").style.display = 'none'
+
+        //inputNameOK
+        //form-control-plaintext
+    }
+    function dpass() {
+        document.getElementById('cpass').style.display = 'block'
+        document.getElementById('bpass').style.display = 'none'
+    }
+    function alphaOnly(event) {
+        var key = event.keyCode;
+        return ((key >= 65 && key <= 90) || key == 8 || key == 9 || key == 32);
+    };
+    function alphanumericOnly(event) {
+        var key = event.keyCode;
+        return ((key >= 65 && key <= 90) || key == 8 || key == 9 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    };
+    function ValidateEmail(mail) {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+            return (true)
+        }
+        // alert("You have entered an invalid email address!")
+        return (false)
+    }
+    $(document).ready(function () {
+        $("#inputEmail").on('keyup blur', function () {
+            emailb = ValidateEmail(document.getElementById("inputEmail").value)
+            if (emailb) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/emails',
+                    data: { emailt: document.getElementById("inputEmail").value },
+                    dataType: 'json'                              // <-- add this
+                    //contentType: 'application/json; charset=utf-8' // <-- remove this
+                })
+                    .done(function (result) {
+                        if (result.exist && document.getElementById('inputEmail').value != document.getElementById("emailp").value) {
+                            document.getElementById("emailver").innerHTML = '<span style="color: red;">Email ya registrado</span>'
+                            document.getElementById("inputEmail").setCustomValidity('El correo ya está resgistrado');
+                        } else {
+                            document.getElementById("emailver").innerHTML = '<span style="color: green;">Email disponible</span>'
+                            document.getElementById("inputEmail").setCustomValidity('');
+                        }
+                    })
+                    .fail(function (xhr, status, error) {
+                    })
+                    .always(function (data) {
+                    });
+            } else {
+                document.getElementById("emailver").innerHTML = '<span style="color: red;">Email Inválido</span>'
+            }
+        });
+    });
+</script>
+{{> footer}}

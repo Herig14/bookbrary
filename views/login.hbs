@@ -1,0 +1,37 @@
+{{> header}}
+<style>
+  body {
+    display: -ms-flexbox;
+    display: -webkit-box;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #f5f5f5;
+    overflow: visible
+  }
+  .errmsg{
+    text-align: center;
+  }
+</style>
+
+<form class="form-signin text-center" action="/login" method="POST">
+  <a class="nav-link" style="color: black" href="/">
+    <h2 style=" font-family: 'Roboto';font-weight: bold;">Bookbrary</h2>
+  </a>
+  <h1 class="h3 mb-3 font-weight-normal">Inicia Sesión</h1>
+<small class="form-text text-muted" style="margin-bottom: 10px;" {{#if ok}}hidden{{/if}} ><span id="errmsg" style="color: red;">Email o Contraseña incorrectos</span></small>
+  <label for="inputEmail" class="sr-only">Email</label>
+  <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email" required="" autofocus="">
+  <label for="inputPassword" class="sr-only">Contraseña</label>
+  <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Contraseña" required="">
+  <div class="checkbox mb-3">
+    <a href="/signup">¿No estás registrado?</a>
+  </div>
+  <button class="btn btn-lg  btn-success btn-block" type="submit">Iniciar Sesión</button>
+</form>
+
+{{> packages}}
+{{> footer}}
